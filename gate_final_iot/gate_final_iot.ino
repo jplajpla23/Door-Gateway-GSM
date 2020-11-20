@@ -30,10 +30,9 @@
 
 #define SERVER_PORT 80
 
-
 //Wifi config
-const char *ssid = "YourSSID";
-const char *password = "YourPassword";
+const char *ssid = "ASUS";
+const char *password = "bidoeiradecima1A.";
 
 //SIMG NUMBERS CONFIG
 #define MAXNUMBERSIZE 12
@@ -69,20 +68,14 @@ bool  per5B = false;
 int onTimer = 0;
 
 //keep alive interval
-int keepInterval=0;
+int keepInterval = 0;
 
 //webserver
 WebServer server(SERVER_PORT);
 
 
-void handleRoot() {
+String getCSS() {
   String temp = "";
-  temp += "<html xmlns='http://www.w3.org/1999/xhtml'>";
-  temp += "<head>";
-  temp += "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>";
-  temp += "<title>Gateway</title>";
-  temp += "</head>";
-  temp += "<body id='main_body' >";
   temp += "  <style>";
   temp += " body{background:#BAD7D4;font-family:'Lucida Grande', Tahoma, Arial, Verdana, sans-serif;font-size:small;margin:8px 0 16px;text-align:center;}";
   temp += "#form_container{background:#fff;margin:0 auto;text-align:left;width:640px;}";
@@ -95,17 +88,44 @@ void handleRoot() {
   temp += "input.button_text{overflow:visible;padding:0 7px;width:auto;}.buttons input{font-size:120%;margin-right:5px;}label.description{border:none;color:#222;display:block;font-size:95%;font-weight:700;line-height:150%;padding:0 0 1px;}input.text{background:#fff;border-bottom:1px solid #ddd;border-left:1px solid #c3c3c3;border-right:1px solid #c3c3c3;border-top:1px solid #7c7c7c;color:#333;font-size:100%;margin:0;padding:2px 0;}";
   temp += "input.currency{text-align:right;}input.checkbox{display:block;height:13px;line-height:1.4em;margin:6px 0 0 3px;width:13px;}label.choice{color:#444;display:block;font-size:100%;line-height:1.4em;margin:-1.55em 0 0 25px;padding:4px 0 5px;width:90%;}input.medium{width:50%;}";
   temp += " </style>";
+  return temp;
+}
+String GetHTMLSaving() {
+  String temp = "";
+  temp += "<html xmlns='http://www.w3.org/1999/xhtml'>";
+  temp += "<head>";
+  temp += "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>";
+  temp += "<title>Gateway</title>";
+  temp += "</head>";
+  temp += "<body id='main_body' >";
+  temp += getCSS();
+  temp += " <div id='form_container'>";
+  temp += "   <form class='appnitro'  method='post' action='/save'><div class='form_description'><center><h2><br>Saving ....</h2></center>";
+  temp += "   </div><br></form><div id='footer'>by <a href='https://github.com/jplajpla23'>JPLA</a></div></div><script>setTimeout(function(){ window.location.href=window.location.origin; }, 3000);</script>";
+  temp += "</body></html>";
+
+  return temp;
+}
+void handleRoot() {
+  String temp = "";
+  temp += "<html xmlns='http://www.w3.org/1999/xhtml'>";
+  temp += "<head>";
+  temp += "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>";
+  temp += "<title>Gateway</title>";
+  temp += "</head>";
+  temp += "<body id='main_body' >";
+  temp += getCSS();
   temp += " <div id='form_container'>";
   temp += "   <form class='appnitro'  method='post' action='/save'><div class='form_description'><center><h2><br>Gateway Configurations</h2></center>";
-  temp += "   </div><ul><br><label class='description'>SIM 1 Status </label><div><span>"+getStatusSIM1()+"</span>";
-  temp += "   </div><br><label class='description'>SIM 2 Status </label><div><span>"+getStatusSIM1()+"</span></div><hr>";
+  temp += "   </div><ul><br><label class='description'>SIM 1 Status </label><div><span>" + getStatusSIM1() + "</span>";
+  temp += "   </div><br><label class='description'>SIM 2 Status </label><div><span>" + getStatusSIM1() + "</span></div><hr>";
   temp += "   <li  >";
-  temp += "   <label class='description' >Allowed Number 1 </label><div><input name='element_1' class='element text medium' type='text' maxlength='12' value='" + getNumber1AsSTR() + "'/> ";
-  temp += "   </div></li><li ><label class='description' >Allowed Number 2 </label><div><input  name='element_2' class='element text medium' type='text' maxlength='12' value='" + getNumber2AsSTR() + "'/> </div></li><li id='li_3' >";
-  temp += "   <label class='description' >Allowed Number 3 </label><div><input  name='element_3' class='element text medium' type='text' maxlength='12' value='" + getNumber3AsSTR() + "'/></div> ";
-  temp += "   </li><li  ><label class='description' >Allowed Number 4 </label><div><input name='element_4' class='element text medium' type='text' maxlength='12' value='" + getNumber4AsSTR() + "'/></div> ";
+  temp += "   <label class='description' >Allowed Number 1 </label><div><input name='element_1' class='element text medium' type='text' maxlength='12' onkeypress='onlynumberkeyPress(event)' value='" + getNumber1AsSTR() + "'/> ";
+  temp += "   </div></li><li ><label class='description' >Allowed Number 2 </label><div><input  name='element_2' class='element text medium' type='text' onkeypress='onlynumberkeyPress(event)'maxlength='12' value='" + getNumber2AsSTR() + "'/> </div></li><li id='li_3' >";
+  temp += "   <label class='description' >Allowed Number 3 </label><div><input  name='element_3' class='element text medium' type='text' maxlength='12' onkeypress='onlynumberkeyPress(event)' value='" + getNumber3AsSTR() + "'/></div> ";
+  temp += "   </li><li  ><label class='description' >Allowed Number 4 </label><div><input name='element_4' class='element text medium' type='text' onkeypress='onlynumberkeyPress(event)'  maxlength='12' value='" + getNumber4AsSTR() + "'/></div> ";
   temp += "   </li><li  ><label class='description' >Allowed Number 5 </label>";
-  temp += "   <div><input name='element_5' class='element text medium' type='text' maxlength='12' value='" + getNumber5AsSTR() + "'/> ";
+  temp += "   <div><input name='element_5' class='element text medium' type='text' maxlength='12' onkeypress='onlynumberkeyPress(event)' value='" + getNumber5AsSTR() + "'/> ";
   temp += "   </div></li><hr><li  ><label class='description' >Relay 1 </label>";
   temp += "   <span><input  name='element_8_1' class='element checkbox' type='checkbox' value='1' " + getState1A() + "/>";
   temp += "<label class='choice'>Number 1</label><input  name='element_8_2' class='element checkbox' type='checkbox' value='1' " + getState2A() + "/>";
@@ -123,22 +143,25 @@ void handleRoot() {
   temp += "   </li><li ><label class='description'>Relay ON Timer (seconds) </label>";
   temp += "   <div><input name='element_6' class='element text medium' type='number' max='60' value='" + IntasString(onTimer) + "'/> ";
   temp += "   </div></li><hr><li ><label class='description'>SIM Keep Alive Activation - Days </label>";
-  temp += "   <div><input name='element_10' class='element text medium' type='number' max='60' value='"+IntasString(keepInterval)+"'/> ";
+  temp += "   <div><input name='element_10' class='element text medium' type='number' max='60' value='" + IntasString(keepInterval) + "'/> ";
   temp += "   </div></li><li ><label class='description' >SIM Activation Number </label><div>";
-  temp += "   <input name='element_7' class='element text medium' type='text' maxlength='12' value='" + getNumberKeepAsSTR() + "'/> ";
+  temp += "   <input name='element_7' class='element text medium' type='text' maxlength='12' onkeypress='onlynumberkeyPress(event)' value='" + getNumberKeepAsSTR() + "'/> ";
   temp += "   </div></li><li class='buttons'><input id='saveForm' class='button_text' type='submit' name='submit' value='Save' />";
-  temp += "   </li></ul></form><div id='footer'>by <a href='https://github.com/jplajpla23'>JPLA</a></div></div></body></html>";
+  temp += "   </li></ul></form><div id='footer'>by <a href='https://github.com/jplajpla23'>JPLA</a></div></div>";
+  temp += "<script>function onlynumberkeyPress(event){if(!isTelNumber(event.key)){event.preventDefault();}}";
+  temp += " function isTelNumber(s){switch(s){case '1': case '2':case '3':case '4':case '5':case '6':case '7':case '8':case '9':case '0':return true;default:return false;}return false;}";
+  temp += "</script></body></html>";
 
   server.send(200, "text/html", temp);
 
 }
 
-String getStatusSIM1(){
+String getStatusSIM1() {
   return "Unknown";
-  }
-  String getStatusSIM2(){
+}
+String getStatusSIM2() {
   return "Unknown";
-  }
+}
 String IntasString(int val) {
   return String(val);
 }
@@ -208,13 +231,14 @@ String getState5B() {
   }
   return "";
 }
-String getNumberKeepAsSTR(){
-    String out = "";
+
+String getNumberKeepAsSTR() {
+  String out = "";
   for (int i = 0 ; i < SZnumberKeepAlive ; i++) {
     out += numberKeepAlive[i];
   }
   return out;
-  }
+}
 
 String getNumber1AsSTR() {
   String out = "";
@@ -252,21 +276,274 @@ String getNumber5AsSTR() {
   }
   return out;
 }
+void handleSave() {
+  if (server.args() == 0) {
+    String message = "File Not Found\n\n";
+    message += "URI: ";
+    message += server.uri();
+    server.send(404, "text/plain", message);
+    return;
+  }
+  String message = "";
+  //clear all permitions
+  per1A = false;
+  per1B = false;
+  per2A = false;
+  per2B = false;
+  per3A = false;
+  per3B = false;
+  per4A = false;
+  per4B = false;
+  per5A = false;
+  per5B = false;
+  for (uint8_t i = 0; i < server.args(); i++) {
+    processArgument(server.argName(i), server.arg(i));
+    message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
+  }
+  Serial.println(per1A);
+  Serial.println(per2A);
+  Serial.println(per3A);
+  Serial.println(per4A);
+  Serial.println(per5A);
+  Serial.println(per1B);
+  Serial.println(per2B);
+  Serial.println(per3B);
+  Serial.println(per4B);
+  Serial.println(per5B);
+  //save to flash
+
+  //saving
+  server.send(200, "text/html", GetHTMLSaving());
+
+}
+void processArgument(String nm, String val) {
+  if (nm == "element_8_1") {
+    if (val.toInt() == 1) {
+      per1A = true;
+    } else {
+      per1A = false;
+    }
+    return;
+  }
+  if (nm == "element_8_2") {
+    if (val.toInt() == 1) {
+      per2A = true;
+    } else {
+      per2A = false;
+    }
+    return;
+  }
+  if (nm == "element_8_3") {
+    if (val.toInt() == 1) {
+      per3A = true;
+    } else {
+      per3A = false;
+    }
+    return;
+  }
+  if (nm == "element_8_4") {
+    if (val.toInt() == 1) {
+      per4A = true;
+    } else {
+      per4A = false;
+    }
+    return;
+  }
+  if (nm == "element_8_5") {
+    if (val.toInt() == 1) {
+      per5A = true;
+    } else {
+      per5A = false;
+    }
+    return;
+  }
+  if (nm == "element_9_1") {
+    if (val.toInt() == 1) {
+      per1B = true;
+    } else {
+      per1B = false;
+    }
+    return;
+  }
+  if (nm == "element_9_2") {
+    if (val.toInt() == 1) {
+      per2B = true;
+    } else {
+      per2B = false;
+    }
+    return;
+  }
+  if (nm == "element_9_3") {
+    if (val.toInt() == 1) {
+      per3B = true;
+    } else {
+      per3B = false;
+    }
+    return;
+  }
+  if (nm == "element_9_4") {
+    if (val.toInt() == 1) {
+      per4B = true;
+    } else {
+      per4B = false;
+    }
+    return;
+  }
+  if (nm == "element_9_5") {
+    if (val.toInt() == 1) {
+      per5B = true;
+    } else {
+      per5B = false;
+    }
+    return;
+  }
+  if (nm == "element_1") {
+    //allowed number 1
+    if (val.length() == 0) {
+      for (int a = 0; a < 12; a++) {
+        number1[a] = 255; //clear
+      }
+      SZnumber1 = 0;
+    } else {
+      int sz = val.length();
+      if (sz > 12) {
+        sz = 12;
+      }
+      for (int a = 0; a < sz; a++) {
+        number1[a] = ((int)val[a]) - 48; //get assci decimal value from char and substract 48 to get int value
+      }
+      SZnumber1 = sz;
+    }
+
+    return;
+  }
+
+  if (nm == "element_2") {
+    //aloowed number 2
+    if (val.length() == 0) {
+      for (int a = 0; a < 12; a++) {
+        number2[a] = 255; //clear
+      }
+      SZnumber2 = 0;
+    } else {
+      int sz = val.length();
+      if (sz > 12) {
+        sz = 12;
+      }
+      for (int a = 0; a < sz; a++) {
+        number2[a] = ((int)val[a]) - 48; //get assci decimal value from char and substract 48 to get int value
+      }
+      SZnumber2 = sz;
+    }
+    return;
+  }
+  if (nm == "element_3") {
+    //aloowed number 3
+    if (val.length() == 0) {
+      for (int a = 0; a < 12; a++) {
+        number3[a] = 255; //clear
+      }
+      SZnumber3 = 0;
+    } else {
+      int sz = val.length();
+      if (sz > 12) {
+        sz = 12;
+      }
+      for (int a = 0; a < sz; a++) {
+        number3[a] = ((int)val[a]) - 48; //get assci decimal value from char and substract 48 to get int value
+      }
+      SZnumber3 = sz;
+    }
+    return;
+  }
+  if (nm == "element_4") {
+    //aloowed number 4
+    if (val.length() == 0) {
+      for (int a = 0; a < 12; a++) {
+        number4[a] = 255; //clear
+      }
+      SZnumber4 = 0;
+    } else {
+      int sz = val.length();
+      if (sz > 12) {
+        sz = 12;
+      }
+      for (int a = 0; a < sz; a++) {
+        number4[a] = ((int)val[a]) - 48; //get assci decimal value from char and substract 48 to get int value
+      }
+      SZnumber4 = sz;
+    }
+    return;
+  }
+  if (nm == "element_5") {
+    //aloowed number 5
+    if (val.length() == 0) {
+      for (int a = 0; a < 12; a++) {
+        number5[a] = 255; //clear
+      }
+      SZnumber5 = 0;
+    } else {
+      int sz = val.length();
+      if (sz > 12) {
+        sz = 12;
+      }
+      for (int a = 0; a < sz; a++) {
+        number5[a] = ((int)val[a]) - 48; //get assci decimal value from char and substract 48 to get int value
+      }
+      SZnumber5 = sz;
+    }
+    return;
+  }
+  if (nm == "element_6") {
+
+    int intval = val.toInt();
+    if (intval > 60) {
+      intval = 60;
+    }
+    if (intval < 0) {
+      intval = 0;
+    }
+    onTimer = intval * 1000; //save in miliseconds
+    return;
+  }
+  if (nm == "element_10") {
+
+    int intval = val.toInt();
+    if (intval > 60) {
+      intval = 60;
+    }
+    if (intval < 0) {
+      intval = 0;
+    }
+    keepInterval = intval; //save in miliseconds
+    return;
+  }
+
+  if (nm == "element_7") {
+    //keep alive number
+    if (val.length() == 0) {
+      for (int a = 0; a < 12; a++) {
+        numberKeepAlive[a] = 255; //clear
+      }
+      SZnumberKeepAlive = 0;
+    } else {
+      int sz = val.length();
+      if (sz > 12) {
+        sz = 12;
+      }
+      for (int a = 0; a < sz; a++) {
+        numberKeepAlive[a] = ((int)val[a]) - 48; //get assci decimal value from char and substract 48 to get int value
+      }
+      SZnumberKeepAlive = sz;
+    }
+    return;
+  }
+}
 void handleNotFound() {
 
   String message = "File Not Found\n\n";
   message += "URI: ";
   message += server.uri();
-  message += "\nMethod: ";
-  /*message += (server.method() == HTTP_GET) ? "GET" : "POST";
-    message += "\nArguments: ";
-    message += server.args();
-    message += "\n";
-
-    for (uint8_t i = 0; i < server.args(); i++) {
-    message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
-    }
-  */
   server.send(404, "text/plain", message);
 
 }
@@ -300,8 +577,8 @@ void setup(void) {
 
   //WEBSERVER Endpoints
 
-  server.on("/", handleRoot);
-  //  server.on("/save", handleSave);
+  server.on("/", HTTP_GET, handleRoot);
+  server.on("/save", HTTP_POST, handleSave);
   server.onNotFound(handleNotFound);
   server.begin();
   Serial.println("HTTP server started");
@@ -335,17 +612,17 @@ void loadRelayConfigs() {
     onTimer = v * 1000;
   }
 }
-void loadSimConfigs(){
- int v = EEPROM.read(addrKeepAlive);
+void loadSimConfigs() {
+  int v = EEPROM.read(addrKeepAlive);
   if (v > 60) {
-      keepInterval = 60;
+    keepInterval = 60;
   } else {
     keepInterval = v ;
   }
   //load kepp alive number(82)
   for (int a = 0; a < 12; a++) {
     numberKeepAlive[a] = 255; //clear
-   
+
   }
   SZnumberKeepAlive = 0;
   int sz = EEPROM.read(addrNumberKeepAlive); //size of 1st number
