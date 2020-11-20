@@ -7,8 +7,8 @@
 #define EEPROM_SIZE 90
 
 //Wifi config
-const char *ssid = "ASUS";
-const char *password = "bidoeiradecima1A.";
+const char *ssid = "Your SSID";
+const char *password = "YourPassword";
 
 //flash eeprom store configs
 
