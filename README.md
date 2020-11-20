@@ -4,7 +4,7 @@ Open-Source Project Source for ESP32 GSM Relay Gateway
 
 ## Description
 
-- A Project to connect 2 Sim Cards to 
+- A Project to connect 2 Sim Cards to ESP32 and open the Relay with one Call
 
 ## Features
 
