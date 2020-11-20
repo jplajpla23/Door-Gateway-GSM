@@ -1,10 +1,28 @@
 # Door-Gateway-GSM
-!!Under development
-A Simple Project to open a Gate or set a Output to ON on a Simple Call GSM Module connected to Esp32.
 
+Open-Source Project Source for ESP32 GSM Relay Gateway
 
-- Supports 2 SIM
-- Max 5 Numbers
-- Output Timer Configurable
-- Sim Keep alive every X Days to mantains card activated
-- WEB configuration
+## Description
+
+- A Project to connect 2 Sim Cards to 
+
+## Features
+
+- Flash Persistent Storage
+- Max 5 Number Allowed
+- WEB Configuration
+- Keep Alive configurable to SIM keep activation
+- Relay ON Timer interval configurable
+- 2 Relays
+- 2 SIM cards
+- Permitions Configurable by user and Relay
+
+## Status
+
+- Under Development
+
+## Author(s)
+João Agostinho
+
+## License
+by JPLA
