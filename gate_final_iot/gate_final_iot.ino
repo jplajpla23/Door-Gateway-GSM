@@ -31,8 +31,8 @@
 #define SERVER_PORT 80
 
 //Wifi config
-const char *ssid = "ASUS";
-const char *password = "bidoeiradecima1A.";
+const char *ssid = "Your SSID";
+const char *password = "YourPassword";
 
 //SIMG NUMBERS CONFIG
 #define MAXNUMBERSIZE 12
