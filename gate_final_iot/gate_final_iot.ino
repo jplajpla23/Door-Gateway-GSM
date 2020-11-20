@@ -140,8 +140,8 @@ void handleRoot() {
   temp += "<label class='choice' >Number 3</label><input  name='element_9_4' class='element checkbox' type='checkbox' value='1' " + getState4B() + "/>";
   temp += "<label class='choice' >Number 4</label><input  name='element_9_5' class='element checkbox' type='checkbox' value='1' " + getState5B() + "/>";
   temp += "<label class='choice' for='element_9_5'>Number 5</label></span> ";
-  temp += "   </li><li ><label class='description'>Relay ON Timer (seconds) </label>";
-  temp += "   <div><input name='element_6' class='element text medium' type='number' max='60' value='" + IntasString(onTimer) + "'/> ";
+  temp += "   </li><li ><label class='description'>Relay ON Timer (miliseconds)<br> <small>This value will be multiplied by 4 (Eg: 255*4=1020ms )</small></label>";
+  temp += "   <div><input name='element_6' class='element text medium' type='number' max='255' min='1' value='" + IntasString(onTimer) + "'/> ";
   temp += "   </div></li><hr><li ><label class='description'>SIM Keep Alive Activation - Days </label>";
   temp += "   <div><input name='element_10' class='element text medium' type='number' max='60' value='" + IntasString(keepInterval) + "'/> ";
   temp += "   </div></li><li ><label class='description' >SIM Activation Number </label><div>";
@@ -300,22 +300,72 @@ void handleSave() {
     processArgument(server.argName(i), server.arg(i));
     message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
   }
-  Serial.println(per1A);
-  Serial.println(per2A);
-  Serial.println(per3A);
-  Serial.println(per4A);
-  Serial.println(per5A);
-  Serial.println(per1B);
-  Serial.println(per2B);
-  Serial.println(per3B);
-  Serial.println(per4B);
-  Serial.println(per5B);
   //save to flash
-
+  StoreToFlash();
   //saving
   server.send(200, "text/html", GetHTMLSaving());
 
 }
+void StoreToFlash() {
+  //store numbers
+  //1
+  EEPROM.write(addrNumber1, SZnumber1); //store size
+  for (int i = 0 ; i < SZnumber1 ; i++)
+  {
+    EEPROM.write( addrNumber1 + 1 + i, number1[i]);
+  }
+  //2
+  EEPROM.write(addrNumber2, SZnumber2); //store size
+  for (int i = 0 ; i < SZnumber2 ; i++)
+  {
+    EEPROM.write( addrNumber2 + 1 + i, number2[i]);
+  }
+  //3
+  EEPROM.write(addrNumber3, SZnumber3); //store size
+  for (int i = 0 ; i < SZnumber3 ; i++)
+  {
+    EEPROM.write( addrNumber3 + 1 + i, number3[i]);
+  }
+  //4
+  EEPROM.write(addrNumber4, SZnumber4); //store size
+  for (int i = 0 ; i < SZnumber4 ; i++)
+  {
+    EEPROM.write( addrNumber4 + 1 + i, number4[i]);
+  }
+   //5
+  EEPROM.write(addrNumber5, SZnumber5); //store size
+  for (int i = 0 ; i < SZnumber5 ; i++)
+  {
+    EEPROM.write( addrNumber5 + 1 + i, number5[i]);
+  }
+  //store permitions
+
+  EEPROM.write(addrper1A, per1A);
+  EEPROM.write(addrper2A, per2A);
+  EEPROM.write(addrper3A, per3A);
+  EEPROM.write(addrper4A, per4A);
+  EEPROM.write(addrper5A, per5A);
+  EEPROM.write(addrper1B, per1B);
+  EEPROM.write(addrper2B, per2B);
+  EEPROM.write(addrper3B, per3B);
+  EEPROM.write(addrper4B, per4B);
+  EEPROM.write(addrper5B, per5B);
+  //store timer
+  EEPROM.write(addrONTIME, onTimer);
+  //store sim config
+  EEPROM.write(addrKeepAlive, keepInterval);
+  //styore keep alive number
+   //keep alive number
+  EEPROM.write(addrNumberKeepAlive, SZnumberKeepAlive); //store size
+  for (int i = 0 ; i < SZnumberKeepAlive ; i++)
+  {
+    EEPROM.write( addrNumberKeepAlive + 1 + i, numberKeepAlive[i]);
+  }
+  //save
+  EEPROM.commit();
+
+}
+
 void processArgument(String nm, String val) {
   if (nm == "element_8_1") {
     if (val.toInt() == 1) {
@@ -497,13 +547,13 @@ void processArgument(String nm, String val) {
   if (nm == "element_6") {
 
     int intval = val.toInt();
-    if (intval > 60) {
-      intval = 60;
+    if (intval > 255) {
+      intval = 255;
     }
     if (intval < 0) {
       intval = 0;
     }
-    onTimer = intval * 1000; //save in miliseconds
+    onTimer = intval;
     return;
   }
   if (nm == "element_10") {
@@ -601,16 +651,7 @@ void setup(void) {
 void loadRelayConfigs() {
   /*addrONTIME*/
   int v = EEPROM.read(addrONTIME);
-  if (v > 60) {
-    if (v == 255) {
-      onTimer = 0;
-    } else {
-      onTimer = 60000;
-    }
-
-  } else {
-    onTimer = v * 1000;
-  }
+  onTimer = v;
 }
 void loadSimConfigs() {
   int v = EEPROM.read(addrKeepAlive);
@@ -869,7 +910,7 @@ void loadNumbers() {
   for (int i = ((addrNumber5) + 1) ; i < (addrNumber5 + sz5 + 1) ; i++) //read 1st number
   {
 
-    number3[jjjjj] = EEPROM.read(i); //append to array
+    number5[jjjjj] = EEPROM.read(i); //append to array
 
     if (number5[jjjjj] > 9) {
       number5[jjjjj] = 255;
