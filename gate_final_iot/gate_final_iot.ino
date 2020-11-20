@@ -4,6 +4,7 @@
 #include <ESPmDNS.h>
 #include <EEPROM.h>
 
+
 // EEPROM
 #define EEPROM_SIZE 100
 #define addrNumber1 0
@@ -24,9 +25,11 @@
 #define addrONTIME 80
 #define addrKeepAlive 81
 #define addrNumberKeepAlive 82
+
 //SERVER CONFIGS
 
 #define SERVER_PORT 80
+
 
 //Wifi config
 const char *ssid = "YourSSID";
